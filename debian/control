@@ -1,0 +1,12 @@
+Source: ros-galactic-topic-tools
+Section: misc
+Priority: optional
+Maintainer: Emerson Knapp <me@emersonknapp.com>
+Build-Depends: debhelper (>= 9.0.0), ros-galactic-ament-cmake-auto, ros-galactic-ament-cmake-python, ros-galactic-ament-lint-auto, ros-galactic-ament-lint-common, ros-galactic-rclcpp, ros-galactic-rclcpp-components, ros-galactic-rosidl-default-generators, ros-galactic-topic-tools-interfaces, ros-galactic-ros-workspace, ros-galactic-rosidl-typesupport-fastrtps-c, ros-galactic-rosidl-typesupport-fastrtps-cpp
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-galactic-topic-tools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-galactic-rclcpp, ros-galactic-rclcpp-components, ros-galactic-rclpy, ros-galactic-ros2cli, ros-galactic-rosidl-runtime-py, ros-galactic-topic-tools-interfaces, ros-galactic-ros-workspace
+Description: TODO: Package description
