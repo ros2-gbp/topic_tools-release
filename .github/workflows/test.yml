@@ -13,9 +13,9 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     container:
-      image: rostooling/setup-ros-docker:ubuntu-focal-latest
+      image: rostooling/setup-ros-docker:ubuntu-jammy-latest
     steps:
-    - uses: ros-tooling/action-ros-ci@v0.2
+    - uses: ros-tooling/action-ros-ci@v0.3
       with:
         package-name: topic_tools topic_tools_interfaces
         target-ros2-distro: rolling
@@ -28,7 +28,7 @@ jobs:
               ]
             }
           }
-    - uses: actions/upload-artifact@v2.3.1
+    - uses: actions/upload-artifact@v3
       with:
         name: colcon-logs
         path: ros_ws/log
