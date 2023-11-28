@@ -1,4 +1,4 @@
-// Copyright 2021 Daisuke Nishimatsu
+// Copyright 2022 AIT Austrian Institute of Technology GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef TOPIC_TOOLS__DROP_NODE_HPP_
-#define TOPIC_TOOLS__DROP_NODE_HPP_
+#ifndef TOPIC_TOOLS__DELAY_NODE_HPP_
+#define TOPIC_TOOLS__DELAY_NODE_HPP_
 
+#include <list>
 #include <memory>
-#include <optional>  // NOLINT : https://github.com/ament/ament_lint/pull/324
-#include <string>
 #include <utility>
 
 #include "rclcpp/rclcpp.hpp"
@@ -26,19 +25,19 @@
 
 namespace topic_tools
 {
-class DropNode final : public ToolBaseNode
+class DelayNode final : public ToolBaseNode
 {
 public:
   TOPIC_TOOLS_PUBLIC
-  explicit DropNode(const rclcpp::NodeOptions & options);
+  explicit DelayNode(const rclcpp::NodeOptions & options);
 
 private:
   void process_message(std::shared_ptr<rclcpp::SerializedMessage> msg) override;
 
-  int64_t x_;
-  int64_t y_;
-  int count_{0};
+  rclcpp::Duration delay_;
+  bool use_wall_clock_;
+  std::list<rclcpp::TimerBase::SharedPtr> timers_;
 };
 }  // namespace topic_tools
 
-#endif  // TOPIC_TOOLS__DROP_NODE_HPP_
+#endif  // TOPIC_TOOLS__DELAY_NODE_HPP_
