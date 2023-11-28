@@ -1,3 +1,28 @@
+## topic_tools (rolling) - 1.3.0-1
+
+The packages in the `topic_tools` repository were released into the `rolling` distro by running `/usr/bin/bloom-release --rosdistro rolling topic_tools` on `Tue, 28 Nov 2023 18:23:24 -0000`
+
+These packages were released:
+- `topic_tools`
+- `topic_tools_interfaces`
+
+Version of package(s) in repository `topic_tools`:
+
+- upstream repository: https://github.com/ros-tooling/topic_tools.git
+- release repository: https://github.com/ros2-gbp/topic_tools-release.git
+- rosdistro version: `1.0.0-2`
+- old version: `1.1.0-2`
+- new version: `1.3.0-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `1.0.0`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## topic_tools (iron) - 1.2.0-1
 
 The packages in the `topic_tools` repository were released into the `iron` distro by running `/usr/bin/bloom-release --rosdistro iron topic_tools` on `Tue, 28 Nov 2023 18:22:13 -0000`
