@@ -1,0 +1,12 @@
+Source: ros-humble-topic-tools
+Section: misc
+Priority: optional
+Maintainer: Emerson Knapp <me@emersonknapp.com>
+Build-Depends: debhelper (>= 9.0.0), ros-humble-ament-cmake-auto, ros-humble-ament-cmake-gtest <!nocheck>, ros-humble-ament-cmake-python, ros-humble-ament-lint-auto <!nocheck>, ros-humble-ament-lint-common <!nocheck>, ros-humble-rclcpp, ros-humble-rclcpp-components, ros-humble-rosidl-default-generators, ros-humble-rosidl-runtime-py <!nocheck>, ros-humble-std-msgs <!nocheck>, ros-humble-topic-tools-interfaces, ros-humble-ros-workspace, ros-humble-rosidl-typesupport-fastrtps-c, ros-humble-rosidl-typesupport-fastrtps-cpp
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-humble-topic-tools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-humble-rclcpp, ros-humble-rclcpp-components, ros-humble-rclpy, ros-humble-ros2cli, ros-humble-rosidl-runtime-py, ros-humble-topic-tools-interfaces, ros-humble-ros-workspace
+Description: Tools for directing, throttling, selecting, and otherwise messing with ROS 2 topics at a meta level.
