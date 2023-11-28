@@ -18,19 +18,14 @@
 """
 Usage summary.
 
-@author: enriquefernandez, Daisuke Nishimatsu
-Allows to take a topic or one of it fields and output it on another topic
-after performing a valid python operation.
-The operations are done on the message, which is taken in the variable 'm'.
-* Examples (note that numpy is imported by default):
-$ ros2 run topic_tools transform /imu --field orientation.x /x_str std_msgs/String 'std_msgs.msg.String(data=str(m))' --import std_msgs # noqa: E501
-$ ros2 run topic_tools transform /imu --field orientation.x /x_in_degrees std_msgs/Float64 'std_msgs.msg.Float64(data=-numpy.rad2deg(m))' --import std_msgs numpy # noqa: E501
-$ ros2 run topic_tools transform /imu --field orientation /norm std_msgs/Float64 'std_msgs.msg.Float64(data=numpy.sqrt(numpy.sum(numpy.array([m.x, m.y, m.z, m.w]))))' --import std_msgs numpy # noqa: E501
-$ ros2 run topic_tools transform /imu --field orientation /norm std_msgs/Float64 'std_msgs.msg.Float64(data=numpy.linalg.norm([m.x, m.y, m.z, m.w]))' --import std_msgs numpy # noqa: E501
-"""
+@author: Kentaro Wada, Esteve Fernandez
+Allows to republish data in a different message type.
+* Examples
+$ ros2 run topic_tools relay_field /chatter /header std_msgs/Header "{stamp: {sec: 0, nanosec: 0}, frame_id: m.data}"
+"""  # noqa
 
 import argparse
-import importlib
+import copy
 import os
 import sys
 
@@ -42,35 +37,19 @@ from rclpy.qos import QoSReliabilityPolicy
 from rclpy.utilities import remove_ros_args
 from ros2topic.api import get_msg_class
 from ros2topic.api import qos_profile_from_short_keys
+from rosidl_runtime_py import set_message_fields
 from rosidl_runtime_py.utilities import get_message
+import yaml
 
 
-class Transform(Node):
+class RelayField(Node):
 
     def __init__(self, args):
-        super().__init__(f'transform_{os.getpid()}')
+        super().__init__(f'relay_field_{os.getpid()}')
 
-        self.modules = {}
-        for module in args.modules:
-            try:
-                mod = importlib.import_module(module)
-            except ImportError:
-                print(f'Failed to import module: {module}', file=sys.stderr)
-            else:
-                self.modules[module] = mod
-
-        self.expression = args.expression
-
-        try:
-            self.expression_as_lambda = eval(f'lambda m: {self.expression}', self.modules)
-        except NameError as e:
-            print(f"Expression using variables other than 'm': {e.message}", file=sys.stderr)
-            raise
-        except UnboundLocalError as e:
-            print(f'Wrong expression: {e.message}', file=sys.stderr)
-            raise
-        except Exception:
-            raise
+        self.msg_generation = yaml.safe_load(args.expression)
+        self.msg_generation_lambda = lambda m: self._eval_in_dict_impl(
+            self.msg_generation, None, {'m': m})
 
         input_topic_in_ns = args.input
         if not input_topic_in_ns.startswith('/'):
@@ -82,12 +61,6 @@ class Transform(Node):
         if input_class is None:
             raise RuntimeError(f'ERROR: Wrong input topic: {input_topic_in_ns}')
 
-        self.field = args.field
-        if self.field is not None:
-            self.field = list(filter(None, self.field.split('.')))
-            if not self.field:
-                raise RuntimeError(f"Invalid field value '{args.field}'")
-
         self.output_class = get_message(args.output_type)
 
         qos_profile = self.choose_qos(args, input_topic_in_ns)
@@ -95,6 +68,21 @@ class Transform(Node):
         self.pub = self.create_publisher(self.output_class, args.output_topic, qos_profile)
         self.sub = self.create_subscription(
             input_class, input_topic_in_ns, self.callback, qos_profile)
+
+    def _eval_in_dict_impl(self, dict_, globals_, locals_):
+        res = copy.deepcopy(dict_)
+        for k, v in res.items():
+            type_ = type(v)
+            if type_ is dict:
+                res[k] = self._eval_in_dict_impl(v, globals_, locals_)
+            elif (type_ is str) or (type_ is bytes):
+                try:
+                    res[k] = eval(v, globals_, locals_)
+                except NameError:
+                    pass
+                except SyntaxError:
+                    pass
+        return res
 
     def choose_qos(self, args, topic_name):
 
@@ -156,52 +144,43 @@ class Transform(Node):
         return qos_profile
 
     def callback(self, m):
-        if self.field is not None:
-            for field in self.field:
-                try:
-                    m = getattr(m, field)
-                except AttributeError as ex:
-                    raise RuntimeError(f"Invalid field '{'.'.join(self.field)}': {ex}")
         try:
-            res = self.expression_as_lambda(m)
-        except Exception:
-            raise
-        else:
-            if not isinstance(res, (list, tuple)):
-                res = [res]
-            self.pub.publish(*res)
+            pub_args = self.msg_generation_lambda(m)
+        except AttributeError as ex:
+            raise RuntimeError(f'Invalid field: {ex}')
+
+        msg = self.output_class()
+        timestamp_fields = set_message_fields(
+            msg, pub_args, expand_header_auto=True, expand_time_now=True)
+        stamp_now = self.get_clock().now().to_msg()
+        for field_setter in timestamp_fields:
+            field_setter(stamp_now)
+        self.pub.publish(msg)
 
 
 def main(argv=sys.argv[1:]):
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
-        description='Apply a Python operation to a topic.\n\n'
-                    'A node is created that subscribes to a topic,\n'
-                    'applies a Python expression to the topic (or topic\n'
-                    'field) message \"m\", and publishes the result\n'
-                    'through another topic.\n\n'
-                    'Usage:\n\tros2 run topic_tools transform '
-                    '<input topic> <output topic> <output type> '
-                    '[<expression on m>] [--import numpy tf] [--field <topic_field>]\n\n'
-                    'Example:\n\tros2 run topic_tools transform /imu --field orientation '
-                    '/norm std_msgs/Float64'
-                    '\"std_msgs.msg.Float64(data=sqrt(sum(array([m.x, m.y, m.z, m.w]))))\"'
-                    ' --import std_msgs')
+        description=(
+            'Allows to relay field data from one topic to another.\n\n'
+            'Usage:\n\tros2 run topic_tools relay_field '
+            '<input> <output topic> <output type> '
+            '<expression on m>\n\n'
+            'Example:\n\tros2 run topic_tools relay_field '
+            '/chatter /header std_msgs/Header '
+            '"{stamp: {sec: 0, nanosec: 0}, frame_id: m.data}"')
+        )
     parser.add_argument('input', help='Input topic or topic field.')
     parser.add_argument('output_topic', help='Output topic.')
     parser.add_argument('output_type', help='Output topic type.')
     parser.add_argument(
-        'expression', default='m',
-        help='Python expression to apply on the input message \"m\".'
-    )
-    parser.add_argument(
-        '-i', '--import', dest='modules', nargs='+', default=['numpy'],
-        help='List of Python modules to import.'
-    )
+        'expression',
+        help="Python expression to apply on the input message 'm'."
+        )
     parser.add_argument(
         '--wait-for-start', action='store_true',
         help='Wait for input messages.'
-    )
+        )
     parser.add_argument(
         '--qos-profile',
         choices=rclpy.qos.QoSPresetProfiles.short_keys(),
@@ -230,23 +209,18 @@ def main(argv=sys.argv[1:]):
         help='Quality of service durability setting to subscribe with '
              '(overrides durability value of --qos-profile option, default: '
              'Automatically match existing publishers )')
-    parser.add_argument(
-        '--field', type=str, default=None,
-        help='Transform a selected field of a message. '
-             "Use '.' to select sub-fields. "
-             'For example, to transform the orientation x field of a sensor_msgs/msg/Imu message: '
-             "'ros2 run topic_tools transform /imu --field orientatin.x'",
-    )
+
+    # get and strip out ros args first
     args = parser.parse_args(remove_ros_args(args=argv))
     rclpy.init(args=argv)
 
-    node = Transform(args)
+    node = RelayField(args)
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
-        print('transform stopped cleanly')
+        print('relay_field stopped cleanly')
     except BaseException:
-        print('exception in transform:', file=sys.stderr)
+        print('exception in relay_field:', file=sys.stderr)
         raise
     finally:
         node.destroy_node()
