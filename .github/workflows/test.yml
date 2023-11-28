@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - humble
+      - iron
 
 jobs:
   build_and_test:
@@ -13,11 +13,11 @@ jobs:
     steps:
     - uses: ros-tooling/setup-ros@v0.6
       with:
-        required-ros-distributions: humble
+        required-ros-distributions: iron
     - uses: ros-tooling/action-ros-ci@v0.3
       with:
         package-name: topic_tools topic_tools_interfaces
-        target-ros2-distro: humble
+        target-ros2-distro: iron
         colcon-defaults: |
           {
             "build": {
