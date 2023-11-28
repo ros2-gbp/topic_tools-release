@@ -2,8 +2,11 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>topic_tools</name>
-  <version>1.0.0</version>
-  <description>TODO: Package description</description>
+  <version>1.2.0</version>
+  <description>
+    Tools for directing, throttling, selecting, and otherwise messing with
+    ROS 2 topics at a meta level.
+  </description>
   <maintainer email="me@emersonknapp.com">Emerson Knapp</maintainer>
   <maintainer email="ros-tooling@googlegroups.com">ROS Tooling Working Group</maintainer>
   <license>Apache License 2.0</license>
@@ -22,6 +25,9 @@
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>std_msgs</test_depend>
+  <test_depend>rosidl_runtime_py</test_depend>
 
   <member_of_group>rosidl_interface_packages</member_of_group>
 
