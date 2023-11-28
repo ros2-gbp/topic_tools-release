@@ -64,6 +64,10 @@ void MuxNode::make_subscribe_unsubscribe_decisions()
 
 void MuxNode::process_message(std::shared_ptr<rclcpp::SerializedMessage> msg)
 {
+  std::scoped_lock lock(pub_mutex_);
+  if (!pub_) {
+    return;
+  }
   pub_->publish(*msg);
 }
 
@@ -173,6 +177,7 @@ void MuxNode::on_mux_select(
     );
     if (it != input_topics_.end()) {
       input_topic_ = request->topic;
+      make_subscribe_unsubscribe_decisions();
       RCLCPP_INFO(get_logger(), "mux selected input: [%s]", request->topic.c_str());
       response->success = true;
     }
