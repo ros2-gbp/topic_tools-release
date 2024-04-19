@@ -1,0 +1,12 @@
+Source: ros-jazzy-topic-tools
+Section: misc
+Priority: optional
+Maintainer: Emerson Knapp <me@emersonknapp.com>
+Build-Depends: debhelper (>= 9.0.0), ros-jazzy-ament-cmake-auto, ros-jazzy-ament-cmake-gtest <!nocheck>, ros-jazzy-ament-cmake-python, ros-jazzy-ament-lint-auto <!nocheck>, ros-jazzy-ament-lint-common <!nocheck>, ros-jazzy-rclcpp, ros-jazzy-rclcpp-components, ros-jazzy-rosidl-default-generators, ros-jazzy-rosidl-runtime-py <!nocheck>, ros-jazzy-std-msgs <!nocheck>, ros-jazzy-topic-tools-interfaces, ros-jazzy-ros-workspace, ros-jazzy-rosidl-typesupport-fastrtps-c, ros-jazzy-rosidl-typesupport-fastrtps-cpp
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-topic-tools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-jazzy-rclcpp, ros-jazzy-rclcpp-components, ros-jazzy-rclpy, ros-jazzy-ros2cli, ros-jazzy-rosidl-runtime-py, ros-jazzy-topic-tools-interfaces, ros-jazzy-ros-workspace
+Description: Tools for directing, throttling, selecting, and otherwise messing with ROS 2 topics at a meta level.
