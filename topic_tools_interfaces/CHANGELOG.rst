@@ -2,10 +2,10 @@
 Changelog for package topic_tools_interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.3.1 (2024-09-02)
+1.4.0 (2024-09-03)
 ------------------
-* Add demux (`#106 <https://github.com/ros-tooling/topic_tools/issues/106>`_) (`#109 <https://github.com/ros-tooling/topic_tools/issues/109>`_)
-* Contributors: Rufus Wong <rcywongaa@gmail.com>
+* Add demux (`#106 <https://github.com/ros-tooling/topic_tools/issues/106>`_)
+* Contributors: Rufus Wong
 
 1.3.0 (2023-11-27)
 ------------------

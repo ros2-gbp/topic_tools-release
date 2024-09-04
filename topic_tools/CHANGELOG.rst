@@ -2,10 +2,11 @@
 Changelog for package topic_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.3.1 (2024-09-02)
+1.4.0 (2024-09-03)
 ------------------
-* Add demux (`#106 <https://github.com/ros-tooling/topic_tools/issues/106>`_) (`#109 <https://github.com/ros-tooling/topic_tools/issues/109>`_)
-* Contributors: Rufus Wong
+* Fix unsubscribing when switching to none topic (`#111 <https://github.com/ros-tooling/topic_tools/issues/111>`_)
+* Add demux (`#106 <https://github.com/ros-tooling/topic_tools/issues/106>`_)
+* Contributors: Adam Morrissett, Rufus Wong
 
 1.3.0 (2023-11-27)
 ------------------
