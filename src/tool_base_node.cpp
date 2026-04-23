@@ -44,8 +44,31 @@ void ToolBaseNode::make_subscribe_unsubscribe_decisions()
     {
       topic_type_ = source_info->first;
       qos_profile_ = source_info->second;
+
+      rclcpp::PublisherOptions options;
+      options.qos_overriding_options = rclcpp::QosOverridingOptions(
+        {
+          rclcpp::QosPolicyKind::Deadline,
+          rclcpp::QosPolicyKind::Durability,
+          rclcpp::QosPolicyKind::History,
+          rclcpp::QosPolicyKind::Depth,
+          rclcpp::QosPolicyKind::Lifespan,
+          rclcpp::QosPolicyKind::Liveliness,
+          rclcpp::QosPolicyKind::LivelinessLeaseDuration,
+          rclcpp::QosPolicyKind::Reliability,
+        });
+
+      // NOTE: Because generic_publisher doesn't currently declare the qos parameters automatically
+      // Passing options through so once that's fixed in rclcpp it'll automatically take effect
+      const rclcpp::QoS & actual_qos = rclcpp::detail::declare_qos_parameters(
+        options.qos_overriding_options,
+        *this,
+        get_node_topics_interface()->resolve_topic_name(output_topic_),
+        *qos_profile_,
+        rclcpp::detail::PublisherQosParametersTraits{});
+
       std::scoped_lock lock(pub_mutex_);
-      pub_ = this->create_generic_publisher(output_topic_, *topic_type_, *qos_profile_);
+      pub_ = this->create_generic_publisher(output_topic_, *topic_type_, actual_qos, options);
     }
     // at this point it is certain that our publisher exists
 
@@ -80,6 +103,12 @@ void ToolBaseNode::make_subscribe_unsubscribe_decisions()
 
 std::optional<std::pair<std::string, rclcpp::QoS>> ToolBaseNode::try_discover_source()
 {
+  // Guard against calls that race with rclcpp::shutdown(): after the context is
+  // invalidated get_publishers_info_by_topic() will throw an RCLError.
+  if (!rclcpp::ok(this->get_node_base_interface()->get_context())) {
+    return {};
+  }
+
   // borrowed this from domain bridge
   // (https://github.com/ros2/domain_bridge/blob/main/src/domain_bridge/wait_for_graph_events.hpp)
   // Query QoS info for publishers
