@@ -1,0 +1,12 @@
+Source: ros-lyrical-topic-tools
+Section: misc
+Priority: optional
+Maintainer: Emerson Knapp <me@emersonknapp.com>
+Build-Depends: debhelper (>= 9.0.0), ros-lyrical-ament-cmake, ros-lyrical-ament-cmake-gtest <!nocheck>, ros-lyrical-ament-cmake-python, ros-lyrical-ament-lint-auto <!nocheck>, ros-lyrical-ament-lint-common <!nocheck>, ros-lyrical-rclcpp, ros-lyrical-rclcpp-components, ros-lyrical-rosidl-default-generators, ros-lyrical-rosidl-runtime-py <!nocheck>, ros-lyrical-std-msgs <!nocheck>, ros-lyrical-topic-tools-interfaces, ros-lyrical-ros-workspace, ros-lyrical-rosidl-typesupport-fastrtps-c, ros-lyrical-rosidl-typesupport-fastrtps-cpp
+Homepage: https://index.ros.org/p/topic_tools/#lyrical
+Standards-Version: 3.9.2
+
+Package: ros-lyrical-topic-tools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-lyrical-rclcpp, ros-lyrical-rclcpp-components, ros-lyrical-rclpy, ros-lyrical-ros2cli, ros-lyrical-ros2topic, ros-lyrical-rosidl-runtime-py, ros-lyrical-topic-tools-interfaces, ros-lyrical-ros-workspace
+Description: Tools for directing, throttling, selecting, and otherwise messing with ROS 2 topics at a meta level.
