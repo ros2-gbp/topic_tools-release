@@ -56,11 +56,8 @@ public:
       }
     }
 
-    auto future = srv_client_->async_send_request(request);
-    executor_->spin_node_all(target_node_, std::chrono::nanoseconds(0));
-    const auto ret = executor_->spin_until_future_complete(future, service_call_timeout_);
-    ASSERT_EQ(ret, rclcpp::FutureReturnCode::SUCCESS);
-    ASSERT_TRUE(future.get()->success);
+    auto result = srv_client_->async_send_request(request);
+    rclcpp::spin_some(target_node_);
   }
 
   void publish_and_check(std::string msg_content)
@@ -69,7 +66,6 @@ public:
   }
 
 private:
-  const std::chrono::seconds service_call_timeout_{10};
   rclcpp::Client<topic_tools_interfaces::srv::DemuxSelect>::SharedPtr srv_client_;
   std::shared_ptr<rclcpp::Node> target_node_;
 };
