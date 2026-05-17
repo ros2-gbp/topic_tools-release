@@ -3,11 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - kilted
-  schedule:
-    # Run every hour. This helps detect flakiness,
-    # and broken external dependencies.
-    - cron:  '0 * * * *'
+      - jazzy
 
 jobs:
   build_and_test:
@@ -18,7 +14,7 @@ jobs:
     - uses: ros-tooling/action-ros-ci@v0.4
       with:
         package-name: topic_tools topic_tools_interfaces
-        target-ros2-distro: kilted
+        target-ros2-distro: jazzy
         colcon-defaults: |
           {
             "build": {
