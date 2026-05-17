@@ -2,34 +2,17 @@
 Changelog for package topic_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.3.4 (2026-05-17)
+1.1.2 (2026-05-17)
 ------------------
-* Fix race condition on shutdown in try_discover_source() (`#143 <https://github.com/ros-tooling/topic_tools/issues/143>`_) (`#151 <https://github.com/ros-tooling/topic_tools/issues/151>`_)
-* Enable QOS Overrides to All Publishers (`#131 <https://github.com/ros-tooling/topic_tools/issues/131>`_) (`#132 <https://github.com/ros-tooling/topic_tools/issues/132>`_)
+* Fix race condition on shutdown in try_discover_source() (`#143 <https://github.com/ros-tooling/topic_tools/issues/143>`_) (`#152 <https://github.com/ros-tooling/topic_tools/issues/152>`_)
+* Enable QOS Overrides to All Publishers (`#131 <https://github.com/ros-tooling/topic_tools/issues/131>`_) (`#134 <https://github.com/ros-tooling/topic_tools/issues/134>`_)
 * Contributors: mergify[bot]
 
-1.3.3 (2025-02-18)
+1.1.1 (2023-11-27)
 ------------------
-* Removed manual namespace resolution (`#123 <https://github.com/ros-tooling/topic_tools/issues/123>`_) (`#124 <https://github.com/ros-tooling/topic_tools/issues/124>`_)
-* Contributors: Martin Oehler
-
-1.3.2 (2024-10-14)
-------------------
-* fix: install python executables again (`#115 <https://github.com/ros-tooling/topic_tools/issues/115>`_) (`#121 <https://github.com/ros-tooling/topic_tools/issues/121>`_)
-* fix: cpp install paths (`#116 <https://github.com/ros-tooling/topic_tools/issues/116>`_) (`#120 <https://github.com/ros-tooling/topic_tools/issues/120>`_)
-* Fix unsubscribing when switching to none topic (`#111 <https://github.com/ros-tooling/topic_tools/issues/111>`_) (`#118 <https://github.com/ros-tooling/topic_tools/issues/118>`_)
-* Contributors: Adam Morrissett, Philipp Schnattinger
-
-1.3.1 (2024-09-02)
-------------------
-* Add demux (`#106 <https://github.com/ros-tooling/topic_tools/issues/106>`_) (`#109 <https://github.com/ros-tooling/topic_tools/issues/109>`_)
-* Contributors: Rufus Wong
-
-1.3.0 (2023-11-27)
-------------------
-* Apply race condition fix to mux (`#78 <https://github.com/ros-tooling/topic_tools/issues/78>`_)
-* Fix windows warnings (`#71 <https://github.com/ros-tooling/topic_tools/issues/71>`_)
-* Make compatible with windows (`#68 <https://github.com/ros-tooling/topic_tools/issues/68>`_)
+* Apply race condition fix to mux (`#78 <https://github.com/ros-tooling/topic_tools/issues/78>`_) (`#79 <https://github.com/ros-tooling/topic_tools/issues/79>`_)
+* Fix windows warnings (backport `#71 <https://github.com/ros-tooling/topic_tools/issues/71>`_) (`#73 <https://github.com/ros-tooling/topic_tools/issues/73>`_)
+* Make compatible with windows (`#68 <https://github.com/ros-tooling/topic_tools/issues/68>`_) (`#70 <https://github.com/ros-tooling/topic_tools/issues/70>`_)
 * Unit tests for all nodes (`#61 <https://github.com/ros-tooling/topic_tools/issues/61>`_)
 * Contributors: andrewbest-tri, anrp-tri, Emerson Knapp, Martin Llofriu
 

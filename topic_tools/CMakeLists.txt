@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(topic_tools)
 
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
-find_package(topic_tools_interfaces REQUIRED)
-
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
 endif()
@@ -14,18 +9,26 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-include_directories(include)
+# find dependencies
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
 
-add_library(relay_node SHARED
+ament_python_install_package(${PROJECT_NAME}
+  SETUP_CFG
+    ${PROJECT_NAME}/setup.cfg
+  SCRIPTS_DESTINATION
+    lib/${PROJECT_NAME}
+)
+
+ament_auto_add_library(relay_node SHARED
   src/relay_node.cpp
   src/tool_base_node.cpp
 )
-ament_target_dependencies(relay_node rclcpp rclcpp_components)
 target_compile_definitions(relay_node PRIVATE "TOPIC_TOOLS_BUILDING_LIBRARY")
 
 rclcpp_components_register_nodes(relay_node "topic_tools::RelayNode")
 
-add_executable(relay
+ament_auto_add_executable(relay
   src/relay.cpp
 )
 
@@ -33,16 +36,15 @@ target_link_libraries(relay
   relay_node
 )
 
-add_library(throttle_node SHARED
+ament_auto_add_library(throttle_node SHARED
   src/throttle_node.cpp
   src/tool_base_node.cpp
 )
-ament_target_dependencies(throttle_node rclcpp rclcpp_components)
 target_compile_definitions(throttle_node PRIVATE "TOPIC_TOOLS_BUILDING_LIBRARY")
 
 rclcpp_components_register_nodes(throttle_node "topic_tools::ThrottleNode")
 
-add_executable(throttle
+ament_auto_add_executable(throttle
   src/throttle.cpp
 )
 
@@ -50,16 +52,15 @@ target_link_libraries(throttle
   throttle_node
 )
 
-add_library(drop_node SHARED
+ament_auto_add_library(drop_node SHARED
   src/drop_node.cpp
   src/tool_base_node.cpp
 )
-ament_target_dependencies(drop_node rclcpp rclcpp_components)
 target_compile_definitions(drop_node PRIVATE "TOPIC_TOOLS_BUILDING_LIBRARY")
 
 rclcpp_components_register_nodes(drop_node "topic_tools::DropNode")
 
-add_executable(drop
+ament_auto_add_executable(drop
   src/drop.cpp
 )
 
@@ -67,16 +68,15 @@ target_link_libraries(drop
   drop_node
 )
 
-add_library(mux_node SHARED
+ament_auto_add_library(mux_node SHARED
   src/mux_node.cpp
   src/tool_base_node.cpp
 )
-ament_target_dependencies(mux_node rclcpp rclcpp_components topic_tools_interfaces)
 target_compile_definitions(mux_node PRIVATE "TOPIC_TOOLS_BUILDING_LIBRARY")
 
 rclcpp_components_register_nodes(mux_node "topic_tools::MuxNode")
 
-add_executable(mux
+ament_auto_add_executable(mux
   src/mux.cpp
 )
 
@@ -84,33 +84,15 @@ target_link_libraries(mux
   mux_node
 )
 
-add_library(demux_node SHARED
-  src/demux_node.cpp
-  src/tool_base_node.cpp
-)
-ament_target_dependencies(demux_node rclcpp rclcpp_components topic_tools_interfaces)
-target_compile_definitions(demux_node PRIVATE "TOPIC_TOOLS_BUILDING_LIBRARY")
-
-rclcpp_components_register_nodes(demux_node "topic_tools::DemuxNode")
-
-add_executable(demux
-  src/demux.cpp
-)
-
-target_link_libraries(demux
-  demux_node
-)
-
-add_library(delay_node SHARED
+ament_auto_add_library(delay_node SHARED
   src/delay_node.cpp
   src/tool_base_node.cpp
 )
-ament_target_dependencies(delay_node rclcpp rclcpp_components)
 target_compile_definitions(delay_node PRIVATE "TOPIC_TOOLS_BUILDING_LIBRARY")
 
 rclcpp_components_register_nodes(delay_node "topic_tools::DelayNode")
 
-add_executable(delay
+ament_auto_add_executable(delay
   src/delay.cpp
 )
 
@@ -169,40 +151,9 @@ if(BUILD_TESTING)
     rclcpp::rclcpp
     ${std_msgs_TARGETS}
   )
-
-  ament_add_gtest(test_demux test/test_demux.cpp)
-  target_include_directories(test_demux PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-  )
-
-  target_link_libraries(test_demux
-    demux_node
-    rclcpp::rclcpp
-    ${std_msgs_TARGETS}
-  )
 endif()
 
-install(TARGETS relay_node throttle_node drop_node mux_node demux_node delay_node
-  EXPORT export_${PROJECT_NAME}
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
+ament_auto_package(
+  INSTALL_TO_SHARE
+    launch
 )
-
-install(DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}
-)
-
-install(TARGETS relay throttle drop mux demux delay
-  DESTINATION lib/${PROJECT_NAME})
-
-
-ament_python_install_package(${PROJECT_NAME}
-  SETUP_CFG
-    ${PROJECT_NAME}/setup.cfg
-  SCRIPTS_DESTINATION
-    lib/${PROJECT_NAME}
-)
-
-ament_package()
