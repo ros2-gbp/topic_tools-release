@@ -2,17 +2,50 @@
 Changelog for package topic_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.1.2 (2026-05-17)
+1.6.1 (2026-11-13)
 ------------------
-* Fix race condition on shutdown in try_discover_source() (`#143 <https://github.com/ros-tooling/topic_tools/issues/143>`_) (`#152 <https://github.com/ros-tooling/topic_tools/issues/152>`_)
-* Enable QOS Overrides to All Publishers (`#131 <https://github.com/ros-tooling/topic_tools/issues/131>`_) (`#134 <https://github.com/ros-tooling/topic_tools/issues/134>`_)
-* Contributors: mergify[bot]
+* Add <numeric> for std::accumulate (`#157 <https://github.com/ros-tooling/topic_tools/issues/157>`_)
+* Update GitHub CI config to use Ubuntu 26.04 Resolute (`#153 <https://github.com/ros-tooling/topic_tools/issues/153>`_)
+* Contributors: Christoph Fröhlich, Christophe Bedard
 
-1.1.1 (2023-11-27)
+1.6.0 (2026-05-17)
 ------------------
-* Apply race condition fix to mux (`#78 <https://github.com/ros-tooling/topic_tools/issues/78>`_) (`#79 <https://github.com/ros-tooling/topic_tools/issues/79>`_)
-* Fix windows warnings (backport `#71 <https://github.com/ros-tooling/topic_tools/issues/71>`_) (`#73 <https://github.com/ros-tooling/topic_tools/issues/73>`_)
-* Make compatible with windows (`#68 <https://github.com/ros-tooling/topic_tools/issues/68>`_) (`#70 <https://github.com/ros-tooling/topic_tools/issues/70>`_)
+
+1.4.4 (2026-04-22)
+------------------
+* Fix race condition on shutdown in try_discover_source() (`#143 <https://github.com/ros-tooling/topic_tools/issues/143>`_)
+* Replace deprecated rclcpp::spin_some (`#144 <https://github.com/ros-tooling/topic_tools/issues/144>`_)
+* Enable QOS Overrides to All Publishers (`#131 <https://github.com/ros-tooling/topic_tools/issues/131>`_)
+* Contributors: Christoph Fröhlich, Marq Rasmussen, Zeerek Ahmad, Emerson Knapp
+
+1.4.3 (2025-05-22)
+------------------
+* Replace ament_target_dependencies with target_link_libraries (`#127 <https://github.com/ros-tooling/topic_tools/issues/127>`_)
+* Add missing exec_depend on ros2topic (`#126 <https://github.com/ros-tooling/topic_tools/issues/126>`_)
+* Contributors: Alejandro Hernández Cordero, Christophe Bedard
+
+1.4.2 (2025-02-18)
+------------------
+* Removed manual namespace resolution (`#123 <https://github.com/ros-tooling/topic_tools/issues/123>`_)
+* Contributors: Martin Oehler
+
+1.4.1 (2024-10-14)
+------------------
+* fix: install python executables again (`#115 <https://github.com/ros-tooling/topic_tools/issues/115>`_)
+* fix: cpp install paths (`#116 <https://github.com/ros-tooling/topic_tools/issues/116>`_)
+* Contributors: Philipp Schnattinger
+
+1.4.0 (2024-09-03)
+------------------
+* Fix unsubscribing when switching to none topic (`#111 <https://github.com/ros-tooling/topic_tools/issues/111>`_)
+* Add demux (`#106 <https://github.com/ros-tooling/topic_tools/issues/106>`_)
+* Contributors: Adam Morrissett, Rufus Wong
+
+1.3.0 (2023-11-27)
+------------------
+* Apply race condition fix to mux (`#78 <https://github.com/ros-tooling/topic_tools/issues/78>`_)
+* Fix windows warnings (`#71 <https://github.com/ros-tooling/topic_tools/issues/71>`_)
+* Make compatible with windows (`#68 <https://github.com/ros-tooling/topic_tools/issues/68>`_)
 * Unit tests for all nodes (`#61 <https://github.com/ros-tooling/topic_tools/issues/61>`_)
 * Contributors: andrewbest-tri, anrp-tri, Emerson Knapp, Martin Llofriu
 

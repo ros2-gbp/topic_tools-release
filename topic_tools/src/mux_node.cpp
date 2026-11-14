@@ -29,13 +29,14 @@ MuxNode::MuxNode(const rclcpp::NodeOptions & options)
   using std::placeholders::_1;
   using std::placeholders::_2;
 
-  input_topic_ = declare_parameter("initial_topic", "");
+  std::string initial_topic = declare_parameter("initial_topic", "");
   output_topic_ = declare_parameter("output_topic", "~/selected");
   lazy_ = declare_parameter<bool>("lazy", false);
   input_topics_ = declare_parameter<std::vector<std::string>>("input_topics");
-  if (input_topic_.empty()) {
-    input_topic_ = input_topics_.front();
+  if (initial_topic.empty()) {
+    initial_topic = input_topics_.front();
   }
+  input_topic_ = initial_topic;
 
   discovery_timer_ = this->create_wall_timer(
     discovery_period_,
@@ -165,6 +166,9 @@ void MuxNode::on_mux_select(
   if (request->topic == NONE_TOPIC) {
     RCLCPP_INFO(get_logger(), "mux selected to no input.");
     input_topic_ = NONE_TOPIC;
+    // Calling the base class's function directly here because NONE_TOPIC is assumed to have no
+    // publishers. Continuously polling through the derived function is unnecessary effort.
+    ToolBaseNode::make_subscribe_unsubscribe_decisions();
     response->success = true;
   } else {
     RCLCPP_INFO(get_logger(), "trying to switch mux to %s", request->topic.c_str());
